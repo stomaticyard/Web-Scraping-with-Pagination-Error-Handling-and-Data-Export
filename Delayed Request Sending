@@ -1,0 +1,13 @@
+import time
+
+def fetch_news_with_delay(url, delay=2):
+    response = requests.get(url)
+    if response.status_code == 200:
+        print(f"Sayfa başarıyla alındı: {url}")
+        soup = BeautifulSoup(response.content, "html.parser")
+        headlines = soup.find_all('h2', class_='news-title')
+        for idx, headline in enumerate(headlines, start=1):
+            print(f"{idx}. {headline.get_text()}")
+        time.sleep(delay)  # Her isteği gönderirken 2 saniye bekle
+    else:
+        print(f"Hata: Sayfa {response.status_code} koduyla alınamadı.")
