@@ -1,0 +1,16 @@
+def clean_text(text):
+    # Başlıkları temizle, boşlukları, özel karakterleri temizle
+    cleaned_text = text.strip().replace("\n", " ").replace("\r", " ")
+    return cleaned_text
+
+def fetch_and_clean_news(url):
+    response = requests.get(url)
+    if response.status_code == 200:
+        print(f"Sayfa başarıyla alındı: {url}")
+        soup = BeautifulSoup(response.content, "html.parser")
+        headlines = soup.find_all('h2', class_='news-title')
+        for idx, headline in enumerate(headlines, start=1):
+            cleaned_headline = clean_text(headline.get_text())
+            print(f"{idx}. {cleaned_headline}")
+    else:
+        print(f"Hata: Sayfa {response.status_code} koduyla alınamadı.")
