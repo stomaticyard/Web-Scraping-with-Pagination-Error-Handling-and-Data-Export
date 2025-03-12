@@ -1,0 +1,28 @@
+import csv
+import json
+
+def save_to_csv(data, filename="headlines.csv"):
+    with open(filename, mode='w', newline='', encoding='utf-8') as file:
+        writer = csv.writer(file)
+        writer.writerow(["Index", "Headline"])
+        writer.writerows(data)
+    print(f"Veri CSV'ye kaydedildi: {filename}")
+
+def save_to_json(data, filename="headlines.json"):
+    with open(filename, 'w', encoding='utf-8') as file:
+        json.dump(data, file, ensure_ascii=False, indent=4)
+    print(f"Veri JSON'a kaydedildi: {filename}")
+
+def fetch_news_and_save(url):
+    response = requests.get(url)
+    data = []
+    if response.status_code == 200:
+        print(f"Sayfa başarıyla alındı: {url}")
+        soup = BeautifulSoup(response.content, "html.parser")
+        headlines = soup.find_all('h2', class_='news-title')
+        for idx, headline in enumerate(headlines, start=1):
+            data.append([idx, headline.get_text()])
+        save_to_csv(data)  # CSV kaydetme
+        save_to_json(data)  # JSON kaydetme
+    else:
+        print(f"Hata: Sayfa {response.status_code} koduyla alınamadı.")
