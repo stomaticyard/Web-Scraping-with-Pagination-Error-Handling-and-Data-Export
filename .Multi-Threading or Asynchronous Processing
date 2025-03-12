@@ -1,0 +1,8 @@
+import concurrent.futures
+
+def fetch_news_multithreaded(urls):
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        executor.map(fetch_news, urls)
+
+urls = ["https://example.com/page1", "https://example.com/page2", "https://example.com/page3"]
+fetch_news_multithreaded(urls)
